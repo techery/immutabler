@@ -1,0 +1,187 @@
+#import "{{name}}.h"
+
+{{#models}}
+@class {{name}};
+{{/models}}
+
+{{#models}}
+
+@implementation {{name}} {
+    int __modelVersion;
+}
+
+{{#any_mappings}}
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+    return {{#dict mappings}}{{/dict}}
+}
+{{/any_mappings}}
+
+{{#custom_mappers}}
++ (NSValueTransformer *){{origin_name}}JSONTransformer {
+    return [ [{{transformer_name}} alloc] init];
+}
+{{/custom_mappers}}
+
+{{#array_mappings}}
++ (NSValueTransformer *){{destination_name}}JSONTransformer {
+    return [MTLJSONAdapter arrayTransformerWithModelClass:[{{type}} class]];
+}
+{{/array_mappings}}
+
+{{#dict_mappings}}
++ (NSValueTransformer *){{name}}JSONTransformer {
+    NSDictionary *dict = {{#enum_mapping_dict attributes}}{{/enum_mapping_dict}}
+    return [MTLValueTransformer transformerUsingForwardBlock:^NSNumber *(NSString *string, BOOL *success, NSError *__autoreleasing *error) {
+       return dict[string];
+   } reverseBlock:^NSString *(NSNumber *number, BOOL *success, NSError *__autoreleasing *error) {
+       return [dict allKeysForObject:number].firstObject;
+   }];
+}
+{{/dict_mappings}}
+
++ ({{name}}*)create:(void(^)({{name}}Builder *builder))builderBlock
+{
+    {{name}}Builder *builder = [{{name}}Builder new];
+    if(builderBlock)
+    {
+        builderBlock(builder);
+    }
+    return [[self alloc] initWithBuilder:builder modelVersion:1];
+}
+
+- (instancetype)init
+{
+    {{name}}Builder *builder = [{{name}}Builder new];
+    return [[[self class] alloc] initWithBuilder:builder modelVersion:1];
+}
+
+- (instancetype)initWithBuilder:({{name}}Builder*)builder modelVersion:(int)modelVersion
+{
+    self = [super init];
+
+    if (self) {
+        __modelVersion = modelVersion;
+        {{#props}}
+        _{{name}} = builder.{{name}};
+        {{/props}}
+    }
+
+    return self;
+}
+
+- ({{name}}*)mutate:(void(^)({{name}}Builder *builder))builderBlock
+{
+    {{name}}Builder *builder = [{{name}}Builder new];
+
+    {{#props}}
+    builder.{{name}} = self.{{name}};
+    {{/props}}
+
+    builderBlock(builder);
+
+    return [[[self class] alloc] initWithBuilder:builder modelVersion:__modelVersion + 1];
+}
+
+- (BOOL)isEqual:(id)other {
+    if (other == self)
+        return YES;
+    if (!other || ![[other class] isEqual:[self class]])
+        return NO;
+
+    return [self isEqualToOther:other];
+}
+
+- (BOOL)isEqualToOther:({{name}} *)object {
+    if (self == object)
+        return YES;
+    if (object == nil)
+        return NO;
+    {{#props}}
+    if (self.{{name}} != object.{{name}})
+        return NO;
+    {{/props}}
+    return YES;
+}
+
+- (NSUInteger)hash {
+    NSUInteger hash = 0;
+    {{#props}}
+    {{#is_ref}}
+    hash = hash * 31u + [self.{{name}} hash];
+    {{/is_ref}}
+    {{^is_ref}}
+    hash = hash * 31u + self.{{name}};
+    {{/is_ref}}
+    {{/props}}
+    return hash;
+}
+
+- (NSString *)description {
+    NSMutableString *description = [NSMutableString stringWithFormat:@"<%@: ", NSStringFromClass([self class])];
+    [description appendFormat:@"__modelVersion=%d", __modelVersion];
+    {{#props}}
+    {{#is_ref}}
+    [description appendFormat:@", {{name}}=%@", self.{{name}}];
+    {{/is_ref}}
+    {{^is_ref}}
+    [description appendFormat:@", {{name}}=%@", @(self.{{name}})];
+    {{/is_ref}}
+    {{/props}}
+    [description appendString:@">"];
+    return description;
+}
+
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        {{#props}}
+        {{#is_ref}}
+        _{{name}} = [coder decodeObjectForKey:@"_{{name}}"];
+        {{/is_ref}}
+        {{^is_ref}}
+        _{{name}} = [coder decodeIntForKey:@"_{{name}}"];
+        {{/is_ref}}
+        {{/props}}
+        __modelVersion = [coder decodeIntForKey:@"__modelVersion"];
+    }
+
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder {
+    {{#props}}
+    {{#is_ref}}
+    [coder encodeObject:self.{{name}} forKey:@"_{{name}}"];
+    {{/is_ref}}
+    {{^is_ref}}
+    [coder encodeInteger:self.{{name}} forKey:@"_{{name}}"];
+    {{/is_ref}}
+    {{/props}}
+    [coder encodeInt:__modelVersion forKey:@"__modelVersion"];
+}
+
+- (id)copyWithZone:(NSZone *)zone {
+    {{name}} *copy = [[[self class] allocWithZone:zone] init];
+
+    if (copy != nil) {
+        copy->__modelVersion = __modelVersion + 1;
+        {{#props}}
+        copy->_{{name}} = _{{name}};
+        {{/props}}
+    }
+
+    return copy;
+}
+
+
+@end
+
+@implementation {{name}}Builder
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+    return @{};
+}
+
+@end
+
+{{/models}}

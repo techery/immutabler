@@ -1,0 +1,37 @@
+#import <Foundation/Foundation.h>
+#import <Mantle/Mantle.h>
+
+{{#links}}
+#import "{{.}}.h"
+{{/links}}
+
+{{#enums}}
+{{#enum .}}
+{{/enum}}
+{{/enums}}
+
+{{#models}}
+
+@class {{name}}Builder;
+
+{{#interface .}}
+
+{{#declare_props props readOnly=true}}
+{{/declare_props}}
+
+
++ ({{name}}*)create:(void(^)({{name}}Builder *builder))builder;
+- ({{name}}*)mutate:(void(^)({{name}}Builder *builder))builder;
+
+
+{{/interface}}
+
+@interface {{name}}Builder : {{base_class}}
+
+{{#declare_props props readOnly=false}}
+{{/declare_props}}
+
+
+@end
+
+{{/models}}
