@@ -35,6 +35,14 @@ model :User, base: MyModel do
 end
 ```
 
+You can specify base class for model builder using `builder_base` option:
+
+```ruby
+model :User, builder_base: :CustomBuilder do
+
+end
+```
+
 ## Enums
 
 Enum is describing in `enum` block:
@@ -162,7 +170,7 @@ Immutabler.group :TESalonModels do
     attr :Active
   end
 
-  model :Salon, base: 'CustomModel' do
+  model :Salon, base: 'CustomModel', builder_base: 'CustomBuilder' do
     fields do
       prop :modelId,     :int
       prop :address,     :string
