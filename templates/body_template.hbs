@@ -57,7 +57,8 @@
 
 - (instancetype)initWithBuilder:({{name}}Builder*)builder modelVersion:(int)modelVersion
 {
-    self = [super init];
+    {{#init_with_builder .}}
+    {{/init_with_builder}}
 
     if (self) {
         __modelVersion = modelVersion;

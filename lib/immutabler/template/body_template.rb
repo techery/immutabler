@@ -34,6 +34,13 @@ module Immutabler
           body << "\n};"
         end
 
+        helper(:init_with_builder) do |context, arg, block|
+          if arg[:base_immutable]
+            "    self = [super initWithBuilder:builder modelVersion:modelVersion];\n"
+          else
+            "    self = [super init];\n"
+          end
+        end
       end
 
       def render

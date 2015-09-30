@@ -43,12 +43,13 @@ module Immutabler
       def model(name, options = {}, &block)
         prefix = @prefix + name.to_s
         base = options.fetch(:base, @base_model).to_s
+        base_immutable = options.fetch(:base_immutable, false)
         builder_base = options.fetch(:builder_base, base).to_s
         props = []
         mappings = []
         ModelAttributesBuilder.new(props, mappings, &block)
 
-        model = Model.new(prefix, base, builder_base, props, mappings)
+        model = Model.new(prefix, base, base_immutable, builder_base, props, mappings)
 
         models << model
       end

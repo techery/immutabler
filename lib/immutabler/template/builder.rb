@@ -21,6 +21,7 @@ module Immutabler
           {
             name: model.name,
             base_class: model.base,
+            base_immutable: model.base_immutable,
             builder_base_class: model.builder_base,
             props: build_props(model.props),
             any_mappings: model.mappings.any?,

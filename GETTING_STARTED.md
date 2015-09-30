@@ -35,6 +35,14 @@ model :User, base: MyModel do
 end
 ```
 
+If base class is immutable and must be instantiated with builder, you can use `base_immutable` option:
+
+```ruby
+model :User, base: MyModel, base_immutable: true do
+
+end
+```
+
 You can specify base class for model builder using `builder_base` option:
 
 ```ruby
@@ -163,14 +171,16 @@ Immutabler.group :TESalonModels do
 
   output_dir(gen_path)
   prefix('TE')
-  base_model('MTLModel<MTLJSONSerializing>') # Defaut base model for group
+  base_model('MTLModel<MTLJSONSerializing>') # Default base model for group
 
   enum :ServiceState do
     attr :Archived
     attr :Active
   end
 
-  model :Salon, base: 'CustomModel', builder_base: 'CustomBuilder' do
+  model :Salon, base: 'CustomModel',
+                base_immutable: true,
+                builder_base: 'CustomBuilder' do
     fields do
       prop :modelId,     :int
       prop :address,     :string
