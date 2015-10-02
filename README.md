@@ -1,5 +1,6 @@
 Immutabler
 =========
+[![Gem Version](https://badge.fury.io/rb/immutabler.svg)](http://badge.fury.io/rb/immutabler)
 
 Generator of Objective-C immutable models
 
