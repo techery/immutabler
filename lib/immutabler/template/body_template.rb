@@ -41,6 +41,14 @@ module Immutabler
             "    self = [super init];\n"
           end
         end
+
+        helper(:init_with_coder) do |context, arg, block|
+          if arg[:base_immutable]
+            "    self = [self init];\n"
+          else
+            "    self = [super init];\n"
+          end
+        end
       end
 
       def render

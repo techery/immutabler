@@ -133,7 +133,8 @@
 }
 
 - (id)initWithCoder:(NSCoder *)coder {
-    self = [super init];
+    {{#init_with_coder .}}
+    {{/init_with_coder}}
     if (self) {
         {{#props}}
         {{#is_ref}}
