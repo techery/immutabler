@@ -10,7 +10,7 @@
 {{/base_immutable_interface}}
 
 @implementation {{name}} {
-    int __modelVersion;
+    NSUInteger __modelVersion;
 }
 
 {{#any_mappings}}
@@ -58,7 +58,7 @@
     return [[[self class] alloc] initWithBuilder:builder modelVersion:1];
 }
 
-- (instancetype)initWithBuilder:({{name}}Builder*)builder modelVersion:(int)modelVersion
+- (instancetype)initWithBuilder:({{name}}Builder*)builder modelVersion:(NSUInteger)modelVersion
 {
     {{#init_with_builder .}}
     {{/init_with_builder}}
