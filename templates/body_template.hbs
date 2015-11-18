@@ -6,6 +6,9 @@
 
 {{#models}}
 
+{{#base_immutable_interface .}}
+{{/base_immutable_interface}}
+
 @implementation {{name}} {
     int __modelVersion;
 }

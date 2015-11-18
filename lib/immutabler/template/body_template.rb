@@ -49,6 +49,18 @@ module Immutabler
             "    self = [super init];\n"
           end
         end
+
+        helper(:base_immutable_interface) do |context, arg, block|
+          if arg[:base_immutable]
+            [
+              "@interface {{#{arg[:base_class]}}}(Private)",
+              '- (instancetype)initWithBuilder:(id)builder modelVersion:(NSUInteger)modelVersion;',
+              '@end'
+            ].join("\n")
+          else
+            ''
+          end
+        end
       end
 
       def render
