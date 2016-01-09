@@ -54,7 +54,7 @@ module Immutabler
           if arg[:base_immutable]
             [
               "@interface #{arg[:base_class]}(Private)",
-              '- (instancetype)initWithBuilder:(id)builder modelVersion:(NSUInteger)modelVersion;',
+              '- (instancetype)initWithBuilder:(id)builder modelVersion:(NSInteger)modelVersion;',
               '@end'
             ].join("\n")
           else
