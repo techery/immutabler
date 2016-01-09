@@ -10,7 +10,7 @@
 {{/base_immutable_interface}}
 
 @implementation {{name}} {
-    NSUInteger __modelVersion;
+    NSInteger __modelVersion;
 }
 
 {{#any_mappings}}
@@ -58,7 +58,7 @@
     return [[[self class] alloc] initWithBuilder:builder modelVersion:1];
 }
 
-- (instancetype)initWithBuilder:({{name}}Builder*)builder modelVersion:(NSUInteger)modelVersion
+- (instancetype)initWithBuilder:({{name}}Builder*)builder modelVersion:(NSInteger)modelVersion
 {
     {{#init_with_builder .}}
     {{/init_with_builder}}
@@ -122,7 +122,7 @@
 
 - (NSString *)description {
     NSMutableString *description = [NSMutableString stringWithFormat:@"<%@: ", NSStringFromClass([self class])];
-    [description appendFormat:@"__modelVersion=%d", __modelVersion];
+    [description appendFormat:@"__modelVersion=%ld", __modelVersion];
     {{#props}}
     {{#is_ref}}
     [description appendFormat:@", {{name}}=%@", self.{{name}}];
@@ -147,7 +147,7 @@
         _{{name}} = [coder decodeIntForKey:@"_{{name}}"];
         {{/is_ref}}
         {{/props}}
-        __modelVersion = [coder decodeIntForKey:@"__modelVersion"];
+        __modelVersion = [coder decodeIntegerForKey:@"__modelVersion"];
     }
 
     return self;
@@ -162,7 +162,7 @@
     [coder encodeInteger:self.{{name}} forKey:@"_{{name}}"];
     {{/is_ref}}
     {{/props}}
-    [coder encodeInt:__modelVersion forKey:@"__modelVersion"];
+    [coder encodeInteger:__modelVersion forKey:@"__modelVersion"];
 }
 
 - (id)copyWithZone:(NSZone *)zone {
