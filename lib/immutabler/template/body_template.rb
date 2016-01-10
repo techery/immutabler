@@ -53,9 +53,12 @@ module Immutabler
         helper(:base_immutable_interface) do |context, arg, block|
           if arg[:base_immutable]
             [
+              "#ifndef #{arg[:base_class]}_Private",
+              "#define #{arg[:base_class]}_Private",
               "@interface #{arg[:base_class]}(Private)",
               '- (instancetype)initWithBuilder:(id)builder modelVersion:(NSInteger)modelVersion;',
-              '@end'
+              '@end',
+              "#endif"
             ].join("\n")
           else
             ''

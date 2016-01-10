@@ -122,7 +122,7 @@
 
 - (NSString *)description {
     NSMutableString *description = [NSMutableString stringWithFormat:@"<%@: ", NSStringFromClass([self class])];
-    [description appendFormat:@"__modelVersion=%ld", __modelVersion];
+    [description appendFormat:@"__modelVersion=%ld", (long)__modelVersion];
     {{#props}}
     {{#is_ref}}
     [description appendFormat:@", {{name}}=%@", self.{{name}}];
