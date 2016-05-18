@@ -3,50 +3,42 @@ module Immutabler
     TYPE_MAPPING = {
       'int' => {
         type: 'NSInteger',
-        is_ref: false,
-        ref_type: 'assign',
-        name_prefix: ''
+        is_ref: false
       },
       'float' => {
         type: 'CGFloat',
-        is_ref: false,
-        ref_type: 'assign',
-        name_prefix: ''
+        is_ref: false
       },
+      'double' => {
+        type: 'double',
+        is_ref: false
+      },      
       'bool' => {
         type: 'BOOL',
-        is_ref: false,
-        ref_type: 'assign',
-        name_prefix: ''
+        is_ref: false
       },
       'array' => {
         type: 'NSArray',
-        is_ref: true,
-        ref_type: 'strong',
-        name_prefix: '*'
+        is_ref: true
       },
       'string' => {
         type: 'NSString',
-        is_ref: true,
-        ref_type: 'strong',
-        name_prefix: '*'
+        is_ref: true
       },
       'dict' => {
         type: 'NSDictionary',
-        is_ref: true,
-        ref_type: 'strong',
-        name_prefix: '*',
+        is_ref: true
       },
       'id' => {
         type: 'id',
         is_ref: true,
         ref_type: 'strong',
-        name_prefix: ''
+        is_id: true
       }
     }
 
     def self.map(type, options)
-      TYPE_MAPPING.fetch(type, default_mapping(type)).merge(options)
+      default_mapping(type).merge(TYPE_MAPPING.fetch(type, default_mapping(type))).merge(options)
     end
 
     private
@@ -56,7 +48,7 @@ module Immutabler
         type: type,
         is_ref: true,
         ref_type: 'strong',
-        name_prefix: '*'
+        is_id: false
       }
     end
   end

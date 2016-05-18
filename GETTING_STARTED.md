@@ -88,24 +88,27 @@ end
 Each field is defining by
 
 ```ruby
-    prop :fieldName, :fieldType
+    prop :fieldName, :fieldType, :name_prefix => your_custom_prefix(string, optional), :is_ref => true or false(optional), :ref_type => 'assign', 'weak', 'strong'(optional), :is_id => true or false(optional)
 ```
 
 There are predefined types:
-* int
-* float
-* bool
-* string
-* array
-* dict
-* id
+* int -> NSInteger in Objective-C
+* float -> CGFloat in Objective-C
+* double -> double in Objective-C
+* bool -> BOOL in Objective-C
+* string -> NSString* in Objective-C
+* array -> NSArray* in Objective-C
+* dict -> NSDictionary* in Objective-C
+* id -> id in Objective-C
 
 When you use custom type and it will be transformed into the same.
 
 You can pass additional parameters for prop:
 
-+ prefix: prefix used in Objective-C code (e.g. `*` for referential types).
-+ ref: reference type in Objective-C code (e.g. `weak`)
++ name_prefix: name_prefix to include (please, don't use it for adding/supressing asterisk before property name - use `is_ref`, `is_id` instead)
++ is_ref: defines whether property is reference type (pointer) or value type
++ ref_type: property memory management specifier (`weak`, `strong`, `assign`, default - `strong` when `is_ref` is `true`, `assign` when `is_ref` is `false`)
++ is_id: `id` is Objective-C special built-in type. Despite it's reference type, '*' is assumed implicitly and shouldn't be specified manually. Whenever you want to define something of type like `id<MyAwesomeProtocol>` don't forget to add :is_id => true to property definition to suppress asterisk
 
 Example:
 ```ruby

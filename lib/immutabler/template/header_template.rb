@@ -25,9 +25,11 @@ module Immutabler
           arg.map do |prop|
             options = block[:hash]
             access_type = options[:readOnly] ? 'readonly' : 'readwrite'
-            prop_arguments = "@property(nonatomic, #{prop[:ref_type]}, #{access_type})"
-            prop_field = "#{prop[:type]} #{prop[:name_prefix]}#{prop[:name]}"
-
+            asterisk = prop[:is_ref] && !prop[:is_id] ? '*' : ''
+            asterisk_and_prefix =  "#{asterisk}#{prop[:name_prefix]}"
+            memory_management = prop[:is_ref] ? prop[:ref_type] : 'assign';
+            prop_arguments = "@property(nonatomic, #{memory_management}, #{access_type})"
+            prop_field = "#{prop[:type]} #{asterisk_and_prefix}#{prop[:name]}"            
             "#{prop_arguments} #{prop_field};"
           end.join("\n")
         end
