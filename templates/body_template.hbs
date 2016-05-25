@@ -114,7 +114,7 @@
     hash = hash * 31u + [self.{{name}} hash];
     {{/is_ref}}
     {{^is_ref}}
-    hash = hash * 31u + self.{{name}};
+    hash = hash * 31u + (NSUInteger)self.{{name}};
     {{/is_ref}}
     {{/props}}
     return hash;
@@ -144,7 +144,12 @@
         _{{name}} = [coder decodeObjectForKey:@"_{{name}}"];
         {{/is_ref}}
         {{^is_ref}}
-        _{{name}} = [coder decodeIntForKey:@"_{{name}}"];
+        if (sizeof(_{{name}}) < 8) {
+        	_{{name}} = [coder decodeInt32ForKey:@"_{{name}}"];
+        }
+        else {
+        	_{{name}} = [coder decodeInt64ForKey:@"_{{name}}"];
+        }
         {{/is_ref}}
         {{/props}}
         __modelVersion = [coder decodeIntegerForKey:@"__modelVersion"];
@@ -159,7 +164,12 @@
     [coder encodeObject:self.{{name}} forKey:@"_{{name}}"];
     {{/is_ref}}
     {{^is_ref}}
-    [coder encodeInteger:self.{{name}} forKey:@"_{{name}}"];
+	if (sizeof(_{{name}}) < 8) {
+		[coder encodeInt32:self.{{name}} forKey:@"_{{name}}"];
+	}
+	else {
+		[coder encodeInt64:self.{{name}} forKey:@"_{{name}}"];	
+	}    
     {{/is_ref}}
     {{/props}}
     [coder encodeInteger:__modelVersion forKey:@"__modelVersion"];
