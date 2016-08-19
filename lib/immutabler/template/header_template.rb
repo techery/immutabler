@@ -26,10 +26,10 @@ module Immutabler
             options = block[:hash]
             access_type = options[:readOnly] ? 'readonly' : 'readwrite'
             asterisk = prop[:is_ref] && !prop[:is_id] ? '*' : ''
-            asterisk_and_prefix =  "#{asterisk}#{prop[:name_prefix]}"
+            asterisk_and_prefix = "#{asterisk}#{prop[:name_prefix]}"
             memory_management = prop[:is_ref] ? prop[:ref_type] : 'assign';
             prop_arguments = "@property(nonatomic, #{memory_management}, #{access_type})"
-            prop_field = "#{prop[:type]} #{asterisk_and_prefix}#{prop[:name]}"            
+            prop_field = "#{prop[:type]} #{asterisk_and_prefix}#{prop[:name]}"
             "#{prop_arguments} #{prop_field};"
           end.join("\n")
         end
@@ -45,7 +45,7 @@ module Immutabler
 
       def build_enums(enums)
         enums.map do |enum|
-          attributes = enum.attributes.map { |attr| { name: attr.name } }
+          attributes = enum.attributes.map { |attr| {name: attr.name} }
 
           {
             name: enum.name,
