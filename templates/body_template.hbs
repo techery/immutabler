@@ -139,18 +139,8 @@
     {{#init_with_coder .}}
     {{/init_with_coder}}
     if (self) {
-        {{#props}}
-        {{#is_ref}}
-        _{{name}} = [coder decodeObjectForKey:@"_{{name}}"];
-        {{/is_ref}}
-        {{^is_ref}}
-        if (sizeof(_{{name}}) < 8) {
-        	_{{name}} = [coder decodeInt32ForKey:@"_{{name}}"];
-        }
-        else {
-        	_{{name}} = [coder decodeInt64ForKey:@"_{{name}}"];
-        }
-        {{/is_ref}}
+        {{#props}}        
+        {{#decodeProperty this}}{{/decodeProperty}}
         {{/props}}
         __modelVersion = [coder decodeIntegerForKey:@"__modelVersion"];
     }
@@ -159,18 +149,8 @@
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder {
-    {{#props}}
-    {{#is_ref}}
-    [coder encodeObject:self.{{name}} forKey:@"_{{name}}"];
-    {{/is_ref}}
-    {{^is_ref}}
-	if (sizeof(_{{name}}) < 8) {
-		[coder encodeInt32:self.{{name}} forKey:@"_{{name}}"];
-	}
-	else {
-		[coder encodeInt64:self.{{name}} forKey:@"_{{name}}"];	
-	}    
-    {{/is_ref}}
+    {{#props}}       
+    {{#encodeProperty this}}{{/encodeProperty}}
     {{/props}}
     [coder encodeInteger:__modelVersion forKey:@"__modelVersion"];
 }

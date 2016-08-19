@@ -14,9 +14,7 @@ module Immutabler
           body = "@{\n"
 
           if arg
-            body << arg.map{|m|
-              "@\"#{m.destination_name}\" : @\"#{m.origin_name}\""
-            }.join(",\n")
+            body << arg.map { |m| "@\"#{m.destination_name}\" : @\"#{m.origin_name}\"" }.join(",\n")
           end
 
           body << "\n};"
@@ -26,9 +24,7 @@ module Immutabler
           body = "@{\n"
 
           if arg
-            body << arg.map{|m|
-              "@\"#{m.origin_name}\" : @(#{m.destination_name})"
-            }.join(",\n")
+            body << arg.map { |m| "@\"#{m.origin_name}\" : @(#{m.destination_name})" }.join(",\n")
           end
 
           body << "\n};"
@@ -47,6 +43,46 @@ module Immutabler
             "    self = [self init];\n"
           else
             "    self = [super init];\n"
+          end
+        end
+
+        helper(:decodeProperty) do |context, arg, block|
+          case arg.type
+            when 'BOOL'
+              "        _#{arg.name} = [coder decodeBoolForKey:@\"_#{arg.name}\"];"
+            when 'NSInteger'
+              "        if (sizeof(_#{arg.name}) < 8) {\n            \
+                        _#{arg.name} = [coder decodeInt32ForKey:@\"_#{arg.name}\"];\n\
+                        }\n\
+                        else {\n\
+                        _#{arg.name} = [coder decodeInt64ForKey:@\"_#{arg.name}\"]; \n\
+                        }"
+            when 'CGFloat'
+              "        _#{arg.name} = [coder decodeFloatForKey:@\"_#{arg.name}\"];"
+            when 'double'
+              "        _#{arg.name} = [coder decodeDoubleForKey:@\"_#{arg.name}\"];"
+            else
+              "        _#{arg.name} = [coder decodeObjectForKey:@\"_#{arg.name}\"];"
+          end
+        end
+
+        helper(:encodeProperty) do |context, arg, block|
+          case arg.type
+            when 'BOOL'
+              "        [coder encodeBool:self.#{arg.name} forKey:@\"_#{arg.name}\"];"
+            when 'NSInteger'
+              "        if (sizeof(_#{arg.name}) < 8) {\n            \
+                        [coder encodeInt32:self.#{arg.name} forKey:@\"_#{arg.name}\"];\n\
+                        }\n\
+                        else {\n\
+                        [coder encodeInt64:self.#{arg.name} forKey:@\"_#{arg.name}\"]; \n\
+                        }"
+            when 'CGFloat'
+              "        [coder encodeFloat:self.#{arg.name} forKey:@\"_#{arg.name}\"];"
+            when 'double'
+              "        [coder encodeDouble:self.#{arg.name} forKey:@\"_#{arg.name}\"];"
+            else
+              "        [coder encodeObject:self.#{arg.name} forKey:@\"_#{arg.name}\"];"
           end
         end
 

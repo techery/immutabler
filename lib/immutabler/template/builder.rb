@@ -26,7 +26,7 @@ module Immutabler
             props: build_props(model.props),
             any_mappings: model.mappings.any?,
             array_mappings: model.mappings.select(&:array?),
-            dict_mappings:  build_dict_mappings(model.mappings),
+            dict_mappings: build_dict_mappings(model.mappings),
             custom_mappers: build_custom_mappers(model.mappings),
             mappings: build_mappings(model.mappings)
           }
@@ -53,7 +53,7 @@ module Immutabler
         mappings.select(&:dict?).map do |mapping|
           attributes = mapping.dict_mappings.map do |dict_mapping|
             {
-              origin_name:      dict_mapping[:origin_name],
+              origin_name: dict_mapping[:origin_name],
               destination_name: dict_mapping[:destination_name]
             }
           end

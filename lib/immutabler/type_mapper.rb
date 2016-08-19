@@ -12,7 +12,7 @@ module Immutabler
       'double' => {
         type: 'double',
         is_ref: false
-      },      
+      },
       'bool' => {
         type: 'BOOL',
         is_ref: false
