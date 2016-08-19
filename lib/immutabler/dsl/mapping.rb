@@ -8,7 +8,7 @@ module Immutabler
         @destination_name = destination_name
         @type = options[:type]
         @is_array = options.fetch(:array, false)
-        @is_dict  = options.fetch(:dict,  false)
+        @is_dict = options.fetch(:dict, false)
         @custom_transformer = options[:with]
         @dict_mappings = []
       end
