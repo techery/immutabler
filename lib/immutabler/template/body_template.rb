@@ -49,40 +49,38 @@ module Immutabler
         helper(:decodeProperty) do |context, arg, block|
           case arg.type
             when 'BOOL'
-              "        _#{arg.name} = [coder decodeBoolForKey:@\"_#{arg.name}\"];"
+              decode_template(arg.name, 'Bool')
             when 'NSInteger'
-              "        if (sizeof(_#{arg.name}) < 8) {\n            \
-                        _#{arg.name} = [coder decodeInt32ForKey:@\"_#{arg.name}\"];\n\
-                        }\n\
-                        else {\n\
-                        _#{arg.name} = [coder decodeInt64ForKey:@\"_#{arg.name}\"]; \n\
-                        }"
+              decode_int(arg.name)
             when 'CGFloat'
-              "        _#{arg.name} = [coder decodeFloatForKey:@\"_#{arg.name}\"];"
+              decode_template(arg.name, 'Float')
             when 'double'
-              "        _#{arg.name} = [coder decodeDoubleForKey:@\"_#{arg.name}\"];"
+              decode_template(arg.name, 'Double')
             else
-              "        _#{arg.name} = [coder decodeObjectForKey:@\"_#{arg.name}\"];"
+              if !arg.is_ref 
+                decode_int(arg.name)
+              else
+                decode_template(arg.name, 'Object')
+              end
           end
         end
 
         helper(:encodeProperty) do |context, arg, block|
           case arg.type
             when 'BOOL'
-              "        [coder encodeBool:self.#{arg.name} forKey:@\"_#{arg.name}\"];"
+              encode_template(arg.name, 'Bool')
             when 'NSInteger'
-              "        if (sizeof(_#{arg.name}) < 8) {\n            \
-                        [coder encodeInt32:self.#{arg.name} forKey:@\"_#{arg.name}\"];\n\
-                        }\n\
-                        else {\n\
-                        [coder encodeInt64:self.#{arg.name} forKey:@\"_#{arg.name}\"]; \n\
-                        }"
+              encode_int(arg.name)
             when 'CGFloat'
-              "        [coder encodeFloat:self.#{arg.name} forKey:@\"_#{arg.name}\"];"
+              encode_template(arg.name, 'Float')
             when 'double'
-              "        [coder encodeDouble:self.#{arg.name} forKey:@\"_#{arg.name}\"];"
+              encode_template(arg.name, 'Double')
             else
-              "        [coder encodeObject:self.#{arg.name} forKey:@\"_#{arg.name}\"];"
+              if !arg.is_ref 
+                encode_int(arg.name)
+              else
+                encode_template(arg.name, 'Object')
+              end
           end
         end
 
@@ -104,6 +102,29 @@ module Immutabler
 
       def render
         template.call(models: models, name: name)
+      end
+
+      def encode_template(arg_name, type, leading_spaces_count = 8)
+        "#{' ' * leading_spaces_count}[coder encode#{type}:self.#{arg_name} forKey:@\"_#{arg_name}\"];"
+      end
+      def encode_int(arg_name)
+         "        if (sizeof(_#{arg_name}) < 8) {\n\
+                    #{encode_template(arg_name, 'Int32', 0)} \n\
+                }\n\
+                else {\n\
+                    #{encode_template(arg_name, 'Int64', 0)} \n\
+                }"
+      end
+      def decode_template(arg_name, type, leading_spaces_count = 8)
+        "#{' ' * leading_spaces_count}_#{arg_name} = [coder decode#{type}ForKey:@\"_#{arg_name}\"];"
+      end
+      def decode_int(arg_name)
+        "        if (sizeof(_#{arg_name}) < 8) {\n\
+                    #{decode_template(arg_name, 'Int32', 0)} \n\
+                }\n\
+                else {\n\
+                    #{decode_template(arg_name, 'Int64', 0)} \n\
+                }"
       end
     end
   end
