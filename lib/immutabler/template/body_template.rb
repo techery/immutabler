@@ -72,7 +72,7 @@ module Immutabler
             when 'NSInteger'
               encode_int(arg.name)
             when 'CGFloat'
-              encode_template(arg.name, 'Float')
+              encode_template(arg.name, 'Float', 'float')
             when 'double'
               encode_template(arg.name, 'Double')
             else
@@ -104,8 +104,9 @@ module Immutabler
         template.call(models: models, name: name)
       end
 
-      def encode_template(arg_name, type, leading_spaces_count = 8)
-        "#{' ' * leading_spaces_count}[coder encode#{type}:self.#{arg_name} forKey:@\"_#{arg_name}\"];"
+      def encode_template(arg_name, type, typecast = nil, leading_spaces_count = 8)
+          typecast_expression = typecast ? "(#{typecast})" : ''
+        "#{' ' * leading_spaces_count}[coder encode#{type}:#{typecast_expression}self.#{arg_name} forKey:@\"_#{arg_name}\"];"
       end
       def encode_int(arg_name)
          "        if (sizeof(_#{arg_name}) < 8) {\n\
