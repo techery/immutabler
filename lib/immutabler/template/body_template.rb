@@ -121,10 +121,10 @@ module Immutabler
       end
       def decode_int(arg_name)
         "        if (sizeof(_#{arg_name}) < 8) {\n\
-                    #{decode_template(arg_name, 'Int32', nil, 0)} \n\
+                    #{decode_template(arg_name, 'Int32', 0)} \n\
                 }\n\
                 else {\n\
-                    #{decode_template(arg_name, 'Int64', nil, 0)} \n\
+                    #{decode_template(arg_name, 'Int64', 0)} \n\
                 }"
       end
     end
