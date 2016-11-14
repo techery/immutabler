@@ -13,35 +13,6 @@
     NSInteger __modelVersion;
 }
 
-{{#any_mappings}}
-+ (NSDictionary *)JSONKeyPathsByPropertyKey {
-    return {{#dict mappings}}{{/dict}}
-}
-{{/any_mappings}}
-
-{{#custom_mappers}}
-+ (NSValueTransformer *){{origin_name}}JSONTransformer {
-    return [ [{{transformer_name}} alloc] init];
-}
-{{/custom_mappers}}
-
-{{#array_mappings}}
-+ (NSValueTransformer *){{destination_name}}JSONTransformer {
-    return [MTLJSONAdapter arrayTransformerWithModelClass:[{{type}} class]];
-}
-{{/array_mappings}}
-
-{{#dict_mappings}}
-+ (NSValueTransformer *){{name}}JSONTransformer {
-    NSDictionary *dict = {{#enum_mapping_dict attributes}}{{/enum_mapping_dict}}
-    return [MTLValueTransformer transformerUsingForwardBlock:^NSNumber *(NSString *string, BOOL *success, NSError *__autoreleasing *error) {
-       return dict[string];
-   } reverseBlock:^NSString *(NSNumber *number, BOOL *success, NSError *__autoreleasing *error) {
-       return [dict allKeysForObject:number].firstObject;
-   }];
-}
-{{/dict_mappings}}
-
 + ({{name}}*)create:(void(^)({{name}}Builder *builder))builderBlock
 {
     {{name}}Builder *builder = [{{name}}Builder new];
@@ -139,7 +110,7 @@
     {{#init_with_coder .}}
     {{/init_with_coder}}
     if (self) {
-        {{#props}}        
+        {{#props}}
         {{#decodeProperty this}}{{/decodeProperty}}
         {{/props}}
         __modelVersion = [coder decodeIntegerForKey:@"__modelVersion"];
@@ -149,7 +120,7 @@
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder {
-    {{#props}}       
+    {{#props}}
     {{#encodeProperty this}}{{/encodeProperty}}
     {{/props}}
     [coder encodeInteger:__modelVersion forKey:@"__modelVersion"];
@@ -172,11 +143,6 @@
 @end
 
 @implementation {{name}}Builder
-
-+ (NSDictionary *)JSONKeyPathsByPropertyKey {
-    return @{};
-}
-
 @end
 
 {{/models}}

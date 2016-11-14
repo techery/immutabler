@@ -2,11 +2,12 @@ require_relative 'enum'
 require_relative 'model'
 require_relative 'model_attributes_builder'
 require_relative 'enum_attributes_builder'
+require_relative 'module_import'
 
 module Immutabler
   module DSL
     class Group
-      attr_accessor :name, :models, :enums, :prefix, :links, :output_directory
+      attr_accessor :name, :models, :enums, :prefix, :links, :module_links, :output_directory
 
       def initialize(name)
         @prefix = ''
@@ -15,6 +16,7 @@ module Immutabler
         @models = []
         @enums = []
         @links = []
+        @module_links = []
       end
 
       def prefix(prefix)
@@ -23,6 +25,10 @@ module Immutabler
 
       def link_to(model_group_name)
         links << model_group_name
+      end
+
+      def module_link_to(module_name, file_name)
+        module_links << ModuleImport.new(module_name, file_name)
       end
 
       def output_dir(dir)
@@ -46,10 +52,9 @@ module Immutabler
         base_immutable = options.fetch(:base_immutable, false)
         builder_base = options.fetch(:builder_base, base).to_s
         props = []
-        mappings = []
-        ModelAttributesBuilder.new(props, mappings, &block)
+        ModelAttributesBuilder.new(props, &block)
 
-        model = Model.new(prefix, base, base_immutable, builder_base, props, mappings)
+        model = Model.new(prefix, base, base_immutable, builder_base, props)
 
         models << model
       end
@@ -59,7 +64,8 @@ module Immutabler
           name: name,
           models: models,
           links: links,
-          enums: enums
+          module_links: module_links,
+          enums: enums,
         }
       end
     end

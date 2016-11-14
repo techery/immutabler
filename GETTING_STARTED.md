@@ -122,48 +122,6 @@ Example:
 end
 ```
 
-## Mappings
-
-All mappings are describing in `mapping` block
-```ruby
-mapping do
-
-end
-```
-
-### Simple mapping
-
-Simple mappings are describing wih `map`:
-
-```ruby
-map :json_field_name, :classFieldName
-```
-
-You can specify custom transformer class using `with` option:
-
-```ruby
-map :phone, :phoneNumber, with: :CustomPhoneTransformer
-```
-
-### Array mapping
-
-You can describe mapping array of records using `array`:
-
-```ruby
-array :json_field_name, :classFieldName, :ClassName
-```
-
-### Dict mapping
-
-You can describe mapping json field to custom value (e.g. into enum) with `dict`:
-
-```ruby
-dict  :json_state, :modelState do
-  map :active,   :TEServiceStateActive
-  map :archived, :TEServiceStateArchived
-end
-```
-
 # Full example
 ```ruby
 require 'immutabler'
@@ -174,7 +132,9 @@ Immutabler.group :TESalonModels do
 
   output_dir(gen_path)
   prefix('TE')
-  base_model('MTLModel<MTLJSONSerializing>') # Default base model for group
+  link_to :TEState # #import "TEState.h"
+  module_link_to :Mantle, :MTLModel # #import <Mantle/MTLModel.h>
+  base_model('MTLModel') # Default base model for group
 
   enum :ServiceState do
     attr :Archived
@@ -191,16 +151,6 @@ Immutabler.group :TESalonModels do
       prop :walkIns,     :array
       prop :workingDays, :dict
       prop :state,       :TEState, ref: :weak, prefix: '*'
-    end
-
-    mapping do
-      map   :id,       :modelId
-      map   :phone,    :phone, with: :CustomPhoneTransformer
-      array :walk_ins, :walkIns, :TEWalkIn
-      dict  :state,    :state do
-        map :active,   :TEServiceStateActive
-        map :archived, :TEServiceStateArchived
-      end
     end
   end
 ```

@@ -1,6 +1,8 @@
 #import <Foundation/Foundation.h>
-#import <Mantle/Mantle.h>
-
+{{#module_links}}
+{{#module_import .}}
+{{/module_import}}
+{{/module_links}}
 {{#links}}
 #import "{{.}}.h"
 {{/links}}

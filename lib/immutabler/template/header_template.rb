@@ -3,11 +3,12 @@ require_relative 'template'
 module Immutabler
   module Template
     class HeaderTemplate < BaseTemplate
-      attr_accessor :models, :links, :enums
+      attr_accessor :models, :links, :module_links, :enums
 
-      def initialize(models, links, enums)
+      def initialize(models, links, module_links, enums)
         self.template_file = File.expand_path("#{__dir__}/../../../templates/header_template.hbs")
         self.links = links
+        self.module_links = build_module_imports(module_links)
         self.models = models
         self.enums = build_enums(enums)
 
@@ -41,6 +42,21 @@ module Immutabler
             "} #{arg[:name]};",
           ].join("\n")
         end
+
+        helper(:module_import) do |context, arg, block|
+          [
+            "#import <#{arg[:module_name]}/#{arg[:class_name]}.h>\n"
+          ].join("\n")
+        end
+      end
+
+      def build_module_imports(module_links)
+        module_links.map do |module_link|
+          dict_mapping = {
+            module_name: module_link.module_name,
+            class_name: module_link.class_name,
+          }
+        end
       end
 
       def build_enums(enums)
@@ -55,7 +71,7 @@ module Immutabler
       end
 
       def render
-        template.call(models: models, links: links, enums: enums)
+        template.call(models: models, links: links, module_links:module_links, enums: enums)
       end
     end
   end

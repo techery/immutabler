@@ -10,26 +10,6 @@ module Immutabler
         self.name = name
         self.models = models
 
-        helper(:dict) do |context, arg, block|
-          body = "@{\n"
-
-          if arg
-            body << arg.map { |m| "@\"#{m.destination_name}\" : @\"#{m.origin_name}\"" }.join(",\n")
-          end
-
-          body << "\n};"
-        end
-
-        helper(:enum_mapping_dict) do |context, arg, block|
-          body = "@{\n"
-
-          if arg
-            body << arg.map { |m| "@\"#{m.origin_name}\" : @(#{m.destination_name})" }.join(",\n")
-          end
-
-          body << "\n};"
-        end
-
         helper(:init_with_builder) do |context, arg, block|
           if arg[:base_immutable]
             "    self = [super initWithBuilder:builder modelVersion:modelVersion];\n"
@@ -57,7 +37,7 @@ module Immutabler
             when 'double'
               decode_template(arg.name, 'Double')
             else
-              if !arg.is_ref 
+              if !arg.is_ref
                 decode_int(arg.name)
               else
                 decode_template(arg.name, 'Object')
@@ -76,7 +56,7 @@ module Immutabler
             when 'double'
               encode_template(arg.name, 'Double')
             else
-              if !arg.is_ref 
+              if !arg.is_ref
                 encode_int(arg.name)
               else
                 encode_template(arg.name, 'Object')

@@ -6,8 +6,8 @@ require 'immutabler/version'
 Gem::Specification.new do |spec|
   spec.name          = 'immutabler'
   spec.version       = Immutabler::VERSION
-  spec.authors       = ['Serhij Korochanskyj', 'Sergey Zenchenko', 'Petro Korienev']
-  spec.email         = ['serge.k@techery.io', 'serge.z@techery.io', 'soxjke@gmail.com']
+  spec.authors       = ['Serhij Korochanskyj', 'Sergey Zenchenko', 'Petro Korienev', 'Alexey Faizullov']
+  spec.email         = ['serge.k@techery.io', 'serge.z@techery.io', 'soxjke@gmail.com', 'alex.fuzza@gmail.com']
 
   spec.summary       = 'Generator of Objective-C immutable models'
   spec.description   = 'Generator of Objective-C immutable models'
