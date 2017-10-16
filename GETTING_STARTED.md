@@ -43,7 +43,14 @@ model :User, base: MyModel, base_immutable: true do
 end
 ```
 
-You can specify base class for model builder using `builder_base` option:
+You can avoid generating `isEqual:` method for you by specifying `gen_equatable` option to `false` (`true` by default):
+```ruby
+model :User, gen_equatable: false do
+
+end
+```
+
+You can specify base class for model builder using `builder_base` option (`NSObject` by default):
 
 ```ruby
 model :User, builder_base: :CustomBuilder do

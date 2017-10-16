@@ -50,11 +50,12 @@ module Immutabler
         prefix = @prefix + name.to_s
         base = options.fetch(:base, @base_model).to_s
         base_immutable = options.fetch(:base_immutable, false)
-        builder_base = options.fetch(:builder_base, base).to_s
+        gen_equatable = options.fetch(:gen_equatable, true)
+        builder_base = options.fetch(:builder_base, 'NSObject').to_s
         props = []
         ModelAttributesBuilder.new(props, &block)
 
-        model = Model.new(prefix, base, base_immutable, builder_base, props)
+        model = Model.new(prefix, base, base_immutable, gen_equatable, builder_base, props)
 
         models << model
       end
