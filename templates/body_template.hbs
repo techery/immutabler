@@ -29,7 +29,7 @@
 
 - (instancetype)init
 {
-    return [self create:NULL];
+    return [[self class] create:NULL];
 }
 
 - (instancetype)initWithBuilder:({{name}}Builder*)builder modelVersion:(NSInteger)modelVersion
