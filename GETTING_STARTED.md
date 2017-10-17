@@ -88,7 +88,7 @@ end
 Each field is defining by
 
 ```ruby
-    prop :fieldName, :fieldType, :name_prefix => your_custom_prefix(string, optional), :is_ref => true or false(optional), :ref_type => 'assign', 'weak', 'strong'(optional), :is_id => true or false(optional)
+    prop :fieldName, :fieldType, :name_prefix => your_custom_prefix(string, optional), :is_ref => true or false(optional), :ref_type => 'assign', 'weak', 'strong'(optional), :is_id => true or false(optional), :default => string_or_number_to_put_inplace(optional)
 ```
 
 There are predefined types:
@@ -109,17 +109,19 @@ You can pass additional parameters for prop:
 + is_ref: defines whether property is reference type (pointer) or value type
 + ref_type: property memory management specifier (`weak`, `strong`, `assign`, default - `strong` when `is_ref` is `true`, `assign` when `is_ref` is `false`)
 + is_id: `id` is Objective-C special built-in type. Despite it's reference type, '*' is assumed implicitly and shouldn't be specified manually. Whenever you want to define something of type like `id<MyAwesomeProtocol>` don't forget to add :is_id => true to property definition to suppress asterisk
++ default: defines the default value which will be set when you use `-init`, `+new` or `+create:` constructors.
 
 Example:
 ```ruby
   fields do
-    prop :modelId,     :int
-    prop :address,     :string
+    prop :modelId,     :int, default: 3
+    prop :address,     :string, default: '@""'
     prop :phone,       :string
-    prop :walkIns,     :array
-    prop :workingDays, :dict
-    prop :state,       :TEState, prefix: '', ref: :weak
-end
+    prop :walkIns,     :array, default: "@[]"
+    prop :workingDays, :dict, default: "@{}"
+    prop :numberOfItems, :NSNumber, default: "@3"
+    prop :state,       :TEState, name_prefix: 'pref_', ref_type: :weak
+  end
 ```
 
 # Full example
@@ -145,14 +147,16 @@ Immutabler.group :TESalonModels do
                 base_immutable: true,
                 builder_base: 'CustomBuilder' do
     fields do
-      prop :modelId,     :int
-      prop :address,     :string
+      prop :modelId,     :int, default: 3
+      prop :address,     :string, default: '@""'
       prop :phone,       :string
-      prop :walkIns,     :array
-      prop :workingDays, :dict
-      prop :state,       :TEState, ref: :weak, prefix: '*'
+      prop :walkIns,     :array, default: "@[]"
+      prop :workingDays, :dict, default: "@{}"
+      prop :numberOfItems, :NSNumber, default: "@3"
+      prop :state,       :TEState, name_prefix: 'pref_', ref_type: :weak
     end
   end
+end
 ```
 
 # How to run

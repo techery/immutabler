@@ -16,8 +16,12 @@
 + ({{name}}*)create:(void(^)({{name}}Builder *builder))builderBlock
 {
     {{name}}Builder *builder = [{{name}}Builder new];
-    if(builderBlock)
-    {
+    {{#props}}
+    {{#if default}}
+    builder.{{name}} = {{default}};
+    {{/if}}
+    {{/props}}
+    if (builderBlock) {
         builderBlock(builder);
     }
     return [[self alloc] initWithBuilder:builder modelVersion:1];
@@ -25,8 +29,7 @@
 
 - (instancetype)init
 {
-    {{name}}Builder *builder = [{{name}}Builder new];
-    return [[[self class] alloc] initWithBuilder:builder modelVersion:1];
+    return [self create:NULL];
 }
 
 - (instancetype)initWithBuilder:({{name}}Builder*)builder modelVersion:(NSInteger)modelVersion
