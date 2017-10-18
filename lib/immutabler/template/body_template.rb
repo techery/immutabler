@@ -88,6 +88,7 @@ module Immutabler
           typecast_expression = typecast ? "(#{typecast})" : ''
         "#{' ' * leading_spaces_count}[coder encode#{type}:#{typecast_expression}self.#{arg_name} forKey:@\"_#{arg_name}\"];"
       end
+
       def encode_int(arg_name)
          "        if (sizeof(_#{arg_name}) < 8) {\n\
                     #{encode_template(arg_name, 'Int32', nil, 0)} \n\
@@ -96,9 +97,11 @@ module Immutabler
                     #{encode_template(arg_name, 'Int64', nil, 0)} \n\
                 }"
       end
+
       def decode_template(arg_name, type, leading_spaces_count = 8)
         "#{' ' * leading_spaces_count}_#{arg_name} = [coder decode#{type}ForKey:@\"_#{arg_name}\"];"
       end
+      
       def decode_int(arg_name)
         "        if (sizeof(_#{arg_name}) < 8) {\n\
                     #{decode_template(arg_name, 'Int32', 0)} \n\
