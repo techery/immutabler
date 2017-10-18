@@ -13,8 +13,7 @@
     NSInteger __modelVersion;
 }
 
-+ ({{name}}*)create:(void(^)({{name}}Builder *builder))builderBlock
-{
++ (instancetype)create:(void(^)({{name}}Builder *builder))builderBlock {
     {{name}}Builder *builder = [{{name}}Builder new];
     {{#props}}
     {{#if default}}
@@ -27,13 +26,11 @@
     return [[self alloc] initWithBuilder:builder modelVersion:1];
 }
 
-- (instancetype)init
-{
+- (instancetype)init {
     return [[self class] create:NULL];
 }
 
-- (instancetype)initWithBuilder:({{name}}Builder*)builder modelVersion:(NSInteger)modelVersion
-{
+- (instancetype)initWithBuilder:({{name}}Builder*)builder modelVersion:(NSInteger)modelVersion {
     {{#init_with_builder .}}
     {{/init_with_builder}}
 
@@ -47,8 +44,7 @@
     return self;
 }
 
-- ({{name}}*)mutate:(void(^)({{name}}Builder *builder))builderBlock
-{
+- (instancetype)mutate:(void(^)({{name}}Builder *builder))builderBlock {
     {{name}}Builder *builder = [{{name}}Builder new];
 
     {{#props}}
@@ -60,6 +56,7 @@
     return [[[self class] alloc] initWithBuilder:builder modelVersion:__modelVersion + 1];
 }
 
+{{#gen_equatable}}
 - (BOOL)isEqual:(id)other {
     if (other == self)
         return YES;
@@ -80,7 +77,7 @@
     {{/props}}
     return YES;
 }
-
+{{/gen_equatable}}
 - (NSUInteger)hash {
     NSUInteger hash = 0;
     {{#props}}
@@ -109,7 +106,7 @@
     return description;
 }
 
-- (id)initWithCoder:(NSCoder *)coder {
+- (instancetype)initWithCoder:(NSCoder *)coder {
     {{#init_with_coder .}}
     {{/init_with_coder}}
     if (self) {
@@ -129,7 +126,7 @@
     [coder encodeInteger:__modelVersion forKey:@"__modelVersion"];
 }
 
-- (id)copyWithZone:(NSZone *)zone {
+- (instancetype)copyWithZone:(NSZone *)zone {
     {{name}} *copy = [[[self class] allocWithZone:zone] init];
 
     if (copy != nil) {
@@ -141,7 +138,6 @@
 
     return copy;
 }
-
 
 @end
 
