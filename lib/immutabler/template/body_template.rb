@@ -12,17 +12,17 @@ module Immutabler
 
         helper(:init_with_builder) do |context, arg, block|
           if arg[:base_immutable]
-            "    self = [super initWithBuilder:builder modelVersion:modelVersion];\n"
+            "self = [super initWithBuilder:builder modelVersion:modelVersion];"
           else
-            "    self = [super init];\n"
+            "self = [super init];"
           end
         end
 
         helper(:init_with_coder) do |context, arg, block|
           if arg[:base_immutable]
-            "    self = [self init];\n"
+            "self = [self init];"
           else
-            "    self = [super init];\n"
+            "self = [super init];"
           end
         end
 
@@ -90,12 +90,11 @@ module Immutabler
       end
 
       def encode_int(arg_name)
-         "        if (sizeof(_#{arg_name}) < 8) {\n\
+         "if (sizeof(_#{arg_name}) < 8) {\n\
                     #{encode_template(arg_name, 'Int32', nil, 0)} \n\
-                }\n\
-                else {\n\
+    } else {\n\
                     #{encode_template(arg_name, 'Int64', nil, 0)} \n\
-                }"
+    }"
       end
 
       def decode_template(arg_name, type, leading_spaces_count = 8)
@@ -103,12 +102,11 @@ module Immutabler
       end
       
       def decode_int(arg_name)
-        "        if (sizeof(_#{arg_name}) < 8) {\n\
+        "if (sizeof(_#{arg_name}) < 8) {\n\
                     #{decode_template(arg_name, 'Int32', 0)} \n\
-                }\n\
-                else {\n\
+        } else {\n\
                     #{decode_template(arg_name, 'Int64', 0)} \n\
-                }"
+        }"
       end
     end
   end

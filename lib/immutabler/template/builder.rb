@@ -23,6 +23,7 @@ module Immutabler
             base_class: model.base,
             base_immutable: model.base_immutable,
             gen_equatable: model.gen_equatable,
+            gen_coding: model.gen_coding,
             builder_base_class: model.builder_base,
             props: build_props(model.props),
           }
