@@ -31,9 +31,7 @@
 }
 
 - (instancetype)initWithBuilder:({{name}}Builder*)builder modelVersion:(NSInteger)modelVersion {
-    {{#init_with_builder .}}
-    {{/init_with_builder}}
-
+    {{#init_with_builder .}}{{/init_with_builder}}
     if (self) {
         __modelVersion = modelVersion;
         {{#props}}
@@ -78,6 +76,7 @@
     return YES;
 }
 {{/gen_equatable}}
+
 - (NSUInteger)hash {
     NSUInteger hash = 0;
     {{#props}}
@@ -106,26 +105,6 @@
     return description;
 }
 
-- (instancetype)initWithCoder:(NSCoder *)coder {
-    {{#init_with_coder .}}
-    {{/init_with_coder}}
-    if (self) {
-        {{#props}}
-        {{#decodeProperty this}}{{/decodeProperty}}
-        {{/props}}
-        __modelVersion = [coder decodeIntegerForKey:@"__modelVersion"];
-    }
-
-    return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)coder {
-    {{#props}}
-    {{#encodeProperty this}}{{/encodeProperty}}
-    {{/props}}
-    [coder encodeInteger:__modelVersion forKey:@"__modelVersion"];
-}
-
 - (instancetype)copyWithZone:(NSZone *)zone {
     {{name}} *copy = [[[self class] allocWithZone:zone] init];
 
@@ -143,5 +122,30 @@
 
 @implementation {{name}}Builder
 @end
+{{#gen_coding}}
+
+@implementation {{name}} (ImmutablerCoding)
+
+- (instancetype)initWithCoder:(NSCoder *)coder {
+    {{#init_with_coder .}}{{/init_with_coder}}
+    if (self) {
+        {{#props}}
+        {{#decodeProperty this}}{{/decodeProperty}}
+        {{/props}}
+        __modelVersion = [coder decodeIntegerForKey:@"__modelVersion"];
+    }
+
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder {
+    {{#props}}
+    {{#encodeProperty this}}{{/encodeProperty}}
+    {{/props}}
+    [coder encodeInteger:__modelVersion forKey:@"__modelVersion"];
+}
+
+@end
+{{/gen_coding}}
 
 {{/models}}
